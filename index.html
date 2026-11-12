@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Custom QR Code Generator | URL, Wi-Fi, vCard, Image & PDF</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lightweight client-side QR Code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-4 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-indigo-600">QuickQR Generator</h1>
+            <span class="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-medium">100% Free & Browser-Based</span>
+        </div>
+    </header>
+
+    <!-- Top Banner AdSense Slot -->
+    <div class="max-w-6xl mx-auto px-4 w-full my-4">
+        <div class="bg-slate-200 border border-dashed border-slate-300 rounded-lg p-3 text-center text-xs text-slate-500">
+            <!-- Replace with Google AdSense Responsive Banner Tag -->
+            [ AdSense Header Banner Slot (728x90 / Responsive) ]
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 w-full flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        
+        <!-- Left Column: Tabs, Inputs & Customization (7 Columns) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+            
+            <div>
+                <!-- Tab Navigation -->
+                <div class="flex flex-wrap border-b border-slate-200 mb-6 gap-2">
+                    <button onclick="switchTab('url')" id="btn-url" class="tab-btn pb-3 px-3 font-semibold text-indigo-600 border-b-2 border-indigo-600 transition-all text-sm">Website URL</button>
+                    <button onclick="switchTab('wifi')" id="btn-wifi" class="tab-btn pb-3 px-3 font-medium text-slate-500 hover:text-slate-800 transition-all text-sm">Wi-Fi</button>
+                    <button onclick="switchTab('vcard')" id="btn-vcard" class="tab-btn pb-3 px-3 font-medium text-slate-500 hover:text-slate-800 transition-all text-sm">vCard</button>
+                    <button onclick="switchTab('file')" id="btn-file" class="tab-btn pb-3 px-3 font-medium text-slate-500 hover:text-slate-800 transition-all text-sm">Image / PDF</button>
+                </div>
+
+                <!-- Form Panels -->
+                <div id="form-container" class="mb-8">
+                    <!-- URL Form -->
+                    <div id="panel-url" class="tab-panel space-y-4">
+                        <label class="block text-sm font-medium text-slate-700">Website or Link URL</label>
+                        <input type="url" id="input-url" placeholder="https://example.com" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                    </div>
+
+                    <!-- Wi-Fi Form -->
+                    <div id="panel-wifi" class="tab-panel space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Network Name (SSID)</label>
+                            <input type="text" id="wifi-ssid" placeholder="MyHomeWiFi" class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Password</label>
+                            <input type="text" id="wifi-pass" placeholder="Network Password" class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Encryption Type</label>
+                            <select id="wifi-encryption" class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" onchange="generateQR()">
+                                <option value="WPA">WPA/WPA2</option>
+                                <option value="WEP">WEP</option>
+                                <option value="nopass">No Password</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- vCard Form -->
+                    <div id="panel-vcard" class="tab-panel space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Full Name</label>
+                            <input type="text" id="vcard-name" placeholder="John Doe" class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Phone Number</label>
+                            <input type="tel" id="vcard-phone" placeholder="+1234567890" class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Email Address</label>
+                            <input type="email" id="vcard-email" placeholder="john@example.com" class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                        </div>
+                    </div>
+
+                    <!-- Image / PDF Form -->
+                    <div id="panel-file" class="tab-panel space-y-4 hidden">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800 space-y-1">
+                            <p class="font-semibold">How Image & PDF QR Codes Work:</p>
+                            <p>Upload your PDF or Image to <strong>Google Drive, Dropbox, or Imgur</strong>, set link access to <em>"Anyone with the link"</em>, and paste the link below.</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700">Direct Image or PDF Link (Recommended)</label>
+                            <input type="url" id="file-url" placeholder="https://drive.google.com/file/d/..." class="w-full px-4 py-2 border border-slate-300 rounded-lg mt-1 focus:ring-2 focus:ring-indigo-500 focus:outline-none" oninput="generateQR()">
+                        </div>
+
+                        <div class="border-t border-slate-200 pt-3">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Or embed a tiny file directly (Max 2 KB - Icons/Tiny Text Only)</label>
+                            <input type="file" id="local-file-input" accept="image/*,.pdf" onchange="handleLocalFile(event)" class="block w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            <p id="file-warning" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Color Customization Section -->
+            <div class="border-t border-slate-200 pt-6">
+                <h3 class="text-sm font-semibold text-slate-800 mb-3">Customize QR Colors</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">QR Dots Color</label>
+                        <div class="flex items-center gap-2 border border-slate-300 rounded-lg p-1.5">
+                            <input type="color" id="color-dark" value="#000000" onchange="generateQR()" class="w-8 h-8 rounded cursor-pointer border-0 bg-transparent">
+                            <span id="hex-dark" class="text-xs font-mono text-slate-600">#000000</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Background Color</label>
+                        <div class="flex items-center gap-2 border border-slate-300 rounded-lg p-1.5">
+                            <input type="color" id="color-light" value="#ffffff" onchange="generateQR()" class="w-8 h-8 rounded cursor-pointer border-0 bg-transparent">
+                            <span id="hex-light" class="text-xs font-mono text-slate-600">#FFFFFF</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-2">Tip: Keep strong contrast (dark dots on a light background) so phone cameras scan reliably.</p>
+            </div>
+
+        </div>
+
+        <!-- Right Column: QR Preview & High-Engagement Ad Slot (5 Columns) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- QR Display Box -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center justify-center text-center">
+                <div id="qrcode" class="p-4 bg-slate-50 border border-slate-100 rounded-xl mb-4 flex items-center justify-center min-h-[232px] min-w-[232px]"></div>
+                <button onclick="downloadQR()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-xl transition-colors shadow-sm">
+                    Download PNG
+                </button>
+            </div>
+
+            <!-- High-CTR AdSense Sidebar/Box Slot -->
+            <div class="bg-white rounded-2xl border border-dashed border-slate-300 p-4 text-center text-xs text-slate-400">
+                <!-- Replace with Google AdSense Square / In-Article Ad Tag -->
+                [ AdSense High-CTR Placement Slot (300x250) ]
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-auto text-center text-sm text-slate-500">
+        <p>&copy; 2026 QuickQR. Free browser-based utility.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let currentTab = 'url';
+        let embeddedFileData = '';
+
+        // Initialize QR code on load
+        window.onload = function() {
+            generateQR();
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Reset button styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn pb-3 px-3 font-medium text-slate-500 hover:text-slate-800 transition-all text-sm";
+            });
+            document.getElementById(`btn-${tabName}`).className = "tab-btn pb-3 px-3 font-semibold text-indigo-600 border-b-2 border-indigo-600 transition-all text-sm";
+
+            // Show active panel
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+            document.getElementById(`panel-${tabName}`).classList.remove('hidden');
+
+            generateQR();
+        }
+
+        // Handle local file upload for tiny files (< 2KB)
+        function handleLocalFile(event) {
+            const file = event.target.files[0];
+            const warning = document.getElementById('file-warning');
+            warning.classList.add('hidden');
+            embeddedFileData = '';
+
+            if (!file) return;
+
+            // QR codes have a strict ~2.9KB binary data limit
+            if (file.size > 2000) {
+                warning.textContent = `File is too large (${(file.size / 1024).toFixed(1)} KB). QR codes hold max ~2 KB of raw data. Please upload to Google Drive or Imgur and paste the link above instead.`;
+                warning.classList.remove('hidden');
+                event.target.value = ''; // Clear input
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                embeddedFileData = e.target.result;
+                document.getElementById('file-url').value = ''; // Clear URL field
+                generateQR();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Generate QR based on active tab inputs and selected colors
+        function generateQR() {
+            let data = "";
+
+            if (currentTab === 'url') {
+                data = document.getElementById('input-url').value || "https://example.com";
+            } else if (currentTab === 'wifi') {
+                let ssid = document.getElementById('wifi-ssid').value;
+                let pass = document.getElementById('wifi-pass').value;
+                let enc = document.getElementById('wifi-encryption').value;
+                data = `WIFI:S:${ssid};T:${enc};P:${pass};;`;
+            } else if (currentTab === 'vcard') {
+                let name = document.getElementById('vcard-name').value;
+                let phone = document.getElementById('vcard-phone').value;
+                let email = document.getElementById('vcard-email').value;
+                data = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+            } else if (currentTab === 'file') {
+                let fileUrl = document.getElementById('file-url').value;
+                data = fileUrl || embeddedFileData || "https://drive.google.com";
+            }
+
+            // Get selected colors & update hex labels
+            const colorDark = document.getElementById('color-dark').value;
+            const colorLight = document.getElementById('color-light').value;
+            document.getElementById('hex-dark').textContent = colorDark.toUpperCase();
+            document.getElementById('hex-light').textContent = colorLight.toUpperCase();
+
+            // Clear previous QR instance so colors update cleanly
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = "";
+
+            try {
+                new QRCode(qrContainer, {
+                    text: data,
+                    width: 200,
+                    height: 200,
+                    colorDark: colorDark,
+                    colorLight: colorLight,
+                    correctLevel: QRCode.CorrectLevel.M // Medium error correction allows slightly longer URLs/data
+                });
+            } catch (err) {
+                qrContainer.innerHTML = `<p class="text-xs text-red-500 px-4">Data is too long to fit inside a standard QR code. Use a shorter link.</p>`;
+            }
+        }
+
+        // Download functionality (supports both Canvas and Img elements)
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            const img = document.querySelector('#qrcode img');
+            
+            let imageUrl = '';
+            if (canvas) {
+                imageUrl = canvas.toDataURL("image/png");
+            } else if (img && img.src) {
+                imageUrl = img.src;
+            }
+
+            if (imageUrl) {
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = `qrcode-${currentTab}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    </script>
+</body>
+</html>
